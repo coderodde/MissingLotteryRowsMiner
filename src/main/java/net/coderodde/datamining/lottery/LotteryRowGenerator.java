@@ -66,7 +66,11 @@ public final class LotteryRowGenerator {
                         lotteryConfiguration,
                         "The input LotteryConfiguration is null.");
         
-        this.numbers = new int[lotteryConfiguration.getLotteryRowLength()];
+        this.numbers = new int[lotteryConfiguration.getMaximumNumberValue()];
+        
+        for (int i = 0; i < this.numbers.length; i++) {
+            this.numbers[i] = i + 1;
+        }
     }
     
     /**
@@ -94,10 +98,10 @@ public final class LotteryRowGenerator {
     }
     
     private void shuffleInternalNumbers() {
-        for (int i = 0, n = lotteryConfiguration.getLotteryRowLength();
+        for (int i = 0, n = this.lotteryConfiguration.getMaximumNumberValue();
                 i < n; 
                 i++) {
-            int i2 = getRandomIndex();
+            final int i2 = getRandomIndex();
             swap(i, i2);
         }
     }
@@ -115,7 +119,7 @@ public final class LotteryRowGenerator {
                 this.lotteryConfiguration.getMaximumNumberValue());
     }
     
-    private void swap(int index1, int index2) {
+    private void swap(final int index1, final int index2) {
         int tmp = this.numbers[index1];
         this.numbers[index1] = this.numbers[index2];
         this.numbers[index2] = tmp;

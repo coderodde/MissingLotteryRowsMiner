@@ -13,7 +13,73 @@ import java.util.List;
  */
 public class Demo {
     
+    private static final int LOTTERY_ROW_LENGTH = 7;
+    private static final int LOTTERY_MAXIMUM_NUMBER = 40;
+    private static final int LOTTERY_ROWS = 15_000_000;
+    
     public static void main(String[] args) {
+        smallDemo();
+        
+        final long seed = System.currentTimeMillis();
+        final LotteryConfiguration lotteryConfiguration = 
+                new LotteryConfiguration(LOTTERY_MAXIMUM_NUMBER,
+                                         LOTTERY_ROW_LENGTH);
+        
+        System.out.println("Seed = " + seed);
+        
+        final List<LotteryRow> data = benchmarkAndObtainData(seed);
+        benchmark(lotteryConfiguration, data);
+    }
+    
+    private static List<LotteryRow> benchmarkAndObtainData(final long seed) {
+        final LotteryConfiguration lotteryConfiguration = 
+                new LotteryConfiguration(LOTTERY_MAXIMUM_NUMBER,    
+                                         LOTTERY_ROW_LENGTH);
+        
+        // Warmup run:
+        new LotteryRowGenerator(lotteryConfiguration, seed)
+                .generateLotteryRows(LOTTERY_ROWS);
+        
+        long startTime = System.nanoTime();
+        
+        // Data generation: 
+        final List<LotteryRow> data =
+                new LotteryRowGenerator(lotteryConfiguration)
+                        .generateLotteryRows(LOTTERY_ROWS);
+        
+        long endTime = System.nanoTime();
+        
+        System.out.println(
+                "Data generated in " + 
+                        ((endTime - startTime) / 1_000_000L) + 
+                        " milliseconds.");
+        
+        return data;
+    }
+    
+    private static void benchmark(
+            final LotteryConfiguration lotteryConfiguration,
+            final List<LotteryRow> data) {
+        
+        final long startTime = System.nanoTime();
+        
+        final List<LotteryRow> missingLotteryRows = 
+            new MissingLotteryRowsGenerator(lotteryConfiguration)
+                .addLotteryRows(data)
+                .computeMissingLotteryRows();
+        
+        final long endTime = System.nanoTime();
+        
+        System.out.println(
+                "Duration: " 
+                        + ((endTime - startTime) / 1_000_000L) 
+                        + " milliseconds.");
+        
+        System.out.println(
+                "Missing lottery rows: " + missingLotteryRows.size());
+    }
+    
+    private static void smallDemo() {
         LotteryConfiguration lotteryConfiguration = 
                 new LotteryConfiguration(5, 3);
         
@@ -49,38 +115,5 @@ public class Demo {
                         .computeMissingLotteryRows();
         
         System.out.println(missingLotteryRows);
-    }
-    
-    private static void oldMain() {
-        
-        LotteryConfiguration lotteryConfiguration = 
-                new LotteryConfiguration(10, 3);
-        
-        MissingLotteryRowsGenerator tree = 
-                new MissingLotteryRowsGenerator(lotteryConfiguration);
-        
-        LotteryRow lotteryRow1 = new LotteryRow(lotteryConfiguration);
-        LotteryRow lotteryRow2 = new LotteryRow(lotteryConfiguration);
-        LotteryRow lotteryRow3 = new LotteryRow(lotteryConfiguration);
-        
-        lotteryRow1.appendNumber(3);
-        lotteryRow1.appendNumber(6);
-        lotteryRow1.appendNumber(7);
-        
-        lotteryRow2.appendNumber(3);
-        lotteryRow2.appendNumber(6);
-        lotteryRow2.appendNumber(9);
-        
-        lotteryRow3.appendNumber(2);
-        lotteryRow3.appendNumber(5);
-        lotteryRow3.appendNumber(6);
-        
-        tree.addLotteryRow(lotteryRow1);
-        tree.addLotteryRow(lotteryRow2);
-        tree.addLotteryRow(lotteryRow3);
-        
-        System.out.println("fd");
-        
-        tree.computeMissingLotteryRows();
     }
 }

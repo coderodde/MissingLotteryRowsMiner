@@ -42,17 +42,32 @@ public final class LotteryRow {
                 new int[lotteryConfiguration.getLotteryRowLength()];
     }
     
+    @Override
+    public String toString() {
+        final StringBuilder stringBuilder = new StringBuilder("[");
+        boolean isFirst = true;
+        
+        for (final int number : this.lotteryNumbers) {
+            if (isFirst) {
+                isFirst = false;
+                stringBuilder.append(number);
+            } else {
+                stringBuilder.append(", ").append(number);
+            }
+        }
+        
+        return stringBuilder.append(']').toString();
+    }
+    
     /**
      * Appends a number to the tail of this lottery row.
      * 
      * @param number the number to append.
      */
     public void appendNumber(int number) {
-        final int length = this.lotteryConfiguration.getLotteryRowLength();
-        
         checkNumber(number);
         checkHasSpaceForNewNumber();
-        this.lotteryNumbers[size++] = number;
+        this.lotteryNumbers[this.size++] = number;
         Arrays.sort(this.lotteryNumbers, 0, size);
     }
     
@@ -83,38 +98,6 @@ public final class LotteryRow {
      */
     public LotteryConfiguration getLotteryConfiguration() {
         return this.lotteryConfiguration;
-    }
-    
-    @Override
-    public boolean equals(Object o) {
-        if (o == null) {
-            return false;
-        }
-            
-        if (o == this) {
-            return true;
-        }
-        
-        if (!o.getClass().equals(this.getClass())) {
-            return false;
-        }
-        
-        LotteryRow otherLotteryRow = (LotteryRow) o;
-        return eq(otherLotteryRow);
-    }
-    
-    private boolean eq(LotteryRow otherLotteryRow) {
-        if (this.size != otherLotteryRow.size) {
-            return false;
-        }
-  
-        for (int i = 0; i < this.size; i++) {
-            if (this.lotteryNumbers[i] != otherLotteryRow.lotteryNumbers[i]) {
-                return false;
-            }
-        }
-        
-        return true;
     }
     
     /**

@@ -55,6 +55,17 @@ public final class MissingLotteryRowsGenerator {
      */
     private final LotteryConfiguration lotteryConfiguration;
     
+    /**
+     * Caches the length of the lottery rows.
+     */
+    private final int length;
+    
+    /**
+     * Implements the main constructor.
+     * 
+     * @param lotteryConfiguration the lottery configuration object.
+     * @param root the root node of the radix tree.
+     */
     private MissingLotteryRowsGenerator(
             final LotteryConfiguration lotteryConfiguration,
             final IntegerTreeNode root) {
@@ -65,8 +76,14 @@ public final class MissingLotteryRowsGenerator {
                         "lotteryConfiguration == null");
         
         this.root = Objects.requireNonNull(root, "The root node is null.");
+        this.length = this.lotteryConfiguration.getLotteryRowLength();
     }
     
+    /**
+     * Constructs a missing rows generator with given lottery configuration.
+     * 
+     * @param lotteryConfiguration the lottery configuration.
+     */
     public MissingLotteryRowsGenerator(
             final LotteryConfiguration lotteryConfiguration) {
         this(lotteryConfiguration, new IntegerTreeNode());
@@ -101,7 +118,7 @@ public final class MissingLotteryRowsGenerator {
         checkLotteryRow(lotteryRow);
         IntegerTreeNode node = root;
         
-        for (int i = 0, sz = lotteryRow.size(); i < sz; i++) {
+        for (int i = 0, sz = this.length; i < sz; i++) {
             final IntegerTreeNode nextNode;
             final int number = lotteryRow.getNumber(i);
             
@@ -139,10 +156,31 @@ public final class MissingLotteryRowsGenerator {
         
         do {
             LotteryRow lotteryRow = convertNumbersToLotteryRow(numbers);
-            lotteryRows.add(lotteryRow);
+            
+            if (!treeContains(lotteryRow)) {
+                lotteryRows.add(lotteryRow);
+            }
+            
         } while (increment(numbers));
         
         return lotteryRows;
+    }
+    
+    private boolean treeContains(final LotteryRow lotteryRow) {
+        IntegerTreeNode node = root;
+        
+        for (int i = 0; i < this.length; i++) {
+            final int number = lotteryRow.getNumber(i);
+            final IntegerTreeNode nextNode = node.children.get(number);
+            
+            if (nextNode == null) {
+                return false;
+            }
+            
+            node = nextNode;
+        }
+        
+        return true;
     }
     
     private boolean increment(final int[] numbers) {
@@ -155,7 +193,7 @@ public final class MissingLotteryRowsGenerator {
                 numbers[i]++;
                 
                 for (int k = i + 1; k < length; k++) {
-                    numbers[k] = numbers[k - 1];
+                    numbers[k] = numbers[k - 1] + 1;
                 }
                 
                 return true;
