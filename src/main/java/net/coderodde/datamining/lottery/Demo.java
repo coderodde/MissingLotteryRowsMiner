@@ -17,9 +17,9 @@ import java.util.List;
  */
 public class Demo {
     
+    // 40 choose 7 = 18_643_560 combinations:
     private static final int LOTTERY_ROW_LENGTH = 7;
     private static final int LOTTERY_MAXIMUM_NUMBER = 40;
-//    private static final int LOTTERY_ROWS = 18_643_560;
     private static final int LOTTERY_ROWS = 30_000_000;
     
     public static void main(String[] args) throws IOException {
@@ -62,6 +62,7 @@ public class Demo {
         return data;
     }
     
+    // Warms up and benchmarks the 
     private static void benchmark(
             final LotteryConfiguration lotteryConfiguration,
             final List<LotteryRow> data) throws IOException {
@@ -82,20 +83,21 @@ public class Demo {
         
         System.out.println(
                 "Missing lottery rows: " + missingLotteryRows.size());
-        
-        final File file = new File("missing_data_rows.txt");
-        final BufferedWriter bufferedWriter =
-                new BufferedWriter(new FileWriter(file));
+
+        boolean isFirst = true;
         
         for (final LotteryRow lotteryRow : missingLotteryRows) {
-            bufferedWriter.write(lotteryRow.toString());
-            bufferedWriter.write("\n");
-        } 
-        
-        bufferedWriter.flush();
-        bufferedWriter.close();
+            if (isFirst) {
+                isFirst = false;
+            } else {
+                System.out.println();
+            }
+            
+            System.out.println(lotteryRow);
+        }
     }
     
+    // Runs a small demo:
     private static void smallDemo() {
         LotteryConfiguration lotteryConfiguration = 
                 new LotteryConfiguration(5, 3);

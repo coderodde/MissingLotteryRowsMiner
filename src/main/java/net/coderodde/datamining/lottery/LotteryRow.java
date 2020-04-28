@@ -44,7 +44,7 @@ public final class LotteryRow {
     
     @Override
     public String toString() {
-        final StringBuilder stringBuilder = new StringBuilder("[");
+        final StringBuilder stringBuilder = new StringBuilder();
         boolean isFirst = true;
         
         for (final int number : this.lotteryNumbers) {
@@ -52,11 +52,11 @@ public final class LotteryRow {
                 isFirst = false;
                 stringBuilder.append(number);
             } else {
-                stringBuilder.append(", ").append(number);
+                stringBuilder.append(",").append(number);
             }
         }
         
-        return stringBuilder.append(']').toString();
+        return stringBuilder.toString();
     }
     
     /**
