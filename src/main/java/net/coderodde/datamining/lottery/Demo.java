@@ -81,17 +81,17 @@ public class Demo {
         System.out.println(
                 "Missing lottery rows: " + missingLotteryRows.size());
 
-        boolean isFirst = true;
-        
-        for (final LotteryRow lotteryRow : missingLotteryRows) {
-            if (isFirst) {
-                isFirst = false;
-            } else {
-                System.out.println();
-            }
-            
-            System.out.print(lotteryRow);
-        }
+//        boolean isFirst = true;
+//        
+//        for (final LotteryRow lotteryRow : missingLotteryRows) {
+//            if (isFirst) {
+//                isFirst = false;
+//            } else {
+//                System.out.println();
+//            }
+//            
+//            System.out.print(lotteryRow);
+//        }
     }
     
     // Runs a small demo:
@@ -125,9 +125,11 @@ public class Demo {
                                                           lotteryRow3,
                                                           lotteryRow4);
         
-        List<LotteryRow> missingLotteryRows = 
-                new MissingLotteryRowsGenerator(lotteryConfiguration)
-                        .addLotteryRows(drawnLotteryRows)//
+        MissingLotteryRowsGenerator generator = 
+                new MissingLotteryRowsGenerator(lotteryConfiguration);
+        
+        List<LotteryRow> missingLotteryRows = generator
+                        .addLotteryRows(drawnLotteryRows)
                         .computeMissingLotteryRows();
         
         missingLotteryRows.forEach((row) -> { System.out.println(row);});
