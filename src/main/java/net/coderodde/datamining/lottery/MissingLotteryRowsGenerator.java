@@ -23,11 +23,6 @@ public final class MissingLotteryRowsGenerator {
     private static final class IntegerTreeNode {
         
         /**
-         * The number of the current node.
-         */
-        private int number;
-        
-        /**
          * Children map.
          */
         private SortedMap<Integer, IntegerTreeNode> children;
@@ -40,8 +35,7 @@ public final class MissingLotteryRowsGenerator {
          */
         @Override
         public String toString() {
-            return "{number: " + number +
-                   ", children: " + children.toString() + "}";
+            return "{children: " + children.toString() + "}";
         }
     }
     
@@ -128,7 +122,6 @@ public final class MissingLotteryRowsGenerator {
             
             if (!node.children.containsKey(number)) {
                 node.children.put(number, nextNode = new IntegerTreeNode());
-                nextNode.number = number;
                 
                 if (i < sz - 1) {
                     nextNode.children = new TreeMap<>();
