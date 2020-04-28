@@ -1,5 +1,9 @@
 package net.coderodde.datamining.lottery;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -15,9 +19,10 @@ public class Demo {
     
     private static final int LOTTERY_ROW_LENGTH = 7;
     private static final int LOTTERY_MAXIMUM_NUMBER = 40;
-    private static final int LOTTERY_ROWS = 15_000_000;
+//    private static final int LOTTERY_ROWS = 18_643_560;
+    private static final int LOTTERY_ROWS = 30_000_000;
     
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         smallDemo();
         
         final long seed = System.currentTimeMillis();
@@ -59,7 +64,7 @@ public class Demo {
     
     private static void benchmark(
             final LotteryConfiguration lotteryConfiguration,
-            final List<LotteryRow> data) {
+            final List<LotteryRow> data) throws IOException {
         
         final long startTime = System.nanoTime();
         
@@ -77,6 +82,18 @@ public class Demo {
         
         System.out.println(
                 "Missing lottery rows: " + missingLotteryRows.size());
+        
+        final File file = new File("missing_data_rows.txt");
+        final BufferedWriter bufferedWriter =
+                new BufferedWriter(new FileWriter(file));
+        
+        for (final LotteryRow lotteryRow : missingLotteryRows) {
+            bufferedWriter.write(lotteryRow.toString());
+            bufferedWriter.write("\n");
+        } 
+        
+        bufferedWriter.flush();
+        bufferedWriter.close();
     }
     
     private static void smallDemo() {
