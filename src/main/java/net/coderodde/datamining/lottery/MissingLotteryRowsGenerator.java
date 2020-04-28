@@ -184,15 +184,14 @@ public final class MissingLotteryRowsGenerator {
     }
     
     private boolean increment(final int[] numbers) {
-        final int length = numbers.length;
         final int maximumNumber =
                 this.lotteryConfiguration.getMaximumNumberValue();
         
-        for (int i = length - 1, j = 0; i >= 0; i--, j++) {
+        for (int i = this.length - 1, j = 0; i >= 0; i--, j++) {
             if (numbers[i] < maximumNumber - j) {
                 numbers[i]++;
                 
-                for (int k = i + 1; k < length; k++) {
+                for (int k = i + 1; k < this.length; k++) {
                     numbers[k] = numbers[k - 1] + 1;
                 }
                 
@@ -221,10 +220,9 @@ public final class MissingLotteryRowsGenerator {
     }
     
     private int[] getInitialNumbers() {
-        final int length = this.lotteryConfiguration.getLotteryRowLength();
-        final int[] numbers = new int[length];
+        final int[] numbers = new int[this.length];
         
-        for (int i = 0, number = 1; i < length; i++, number++) {
+        for (int i = 0, number = 1; i < this.length; i++, number++) {
             numbers[i] = number;
         }
         
@@ -232,8 +230,7 @@ public final class MissingLotteryRowsGenerator {
     }
     
     private void checkLotteryRow(final LotteryRow lotteryRow) {
-        if (lotteryRow.size() 
-                != this.lotteryConfiguration.getLotteryRowLength()) {
+        if (lotteryRow.size() != this.length) {
             throw new IllegalArgumentException(
                     "Wrong length of a row (" + lotteryRow.size() + ", " +
                             "must be exactly " + 

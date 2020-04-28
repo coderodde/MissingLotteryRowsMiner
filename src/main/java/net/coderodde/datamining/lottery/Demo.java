@@ -1,8 +1,5 @@
 package net.coderodde.datamining.lottery;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -20,7 +17,7 @@ public class Demo {
     // 40 choose 7 = 18_643_560 combinations:
     private static final int LOTTERY_ROW_LENGTH = 7;
     private static final int LOTTERY_MAXIMUM_NUMBER = 40;
-    private static final int LOTTERY_ROWS = 30_000_000;
+    private static final int LOTTERY_ROWS = 40_000_000;
     
     public static void main(String[] args) throws IOException {
         smallDemo();
@@ -93,7 +90,7 @@ public class Demo {
                 System.out.println();
             }
             
-            System.out.println(lotteryRow);
+            System.out.print(lotteryRow);
         }
     }
     
@@ -133,6 +130,6 @@ public class Demo {
                         .addLotteryRows(drawnLotteryRows)//
                         .computeMissingLotteryRows();
         
-        System.out.println(missingLotteryRows);
+        missingLotteryRows.forEach((row) -> { System.out.println(row);});
     }
 }
