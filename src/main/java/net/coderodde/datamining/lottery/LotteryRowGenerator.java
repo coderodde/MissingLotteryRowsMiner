@@ -13,22 +13,22 @@ import java.util.Random;
  * @since 1.6 (Apr 18, 2020)
  */
 public final class LotteryRowGenerator {
-    
+
     /**
      * The lottery configuration object.
      */
     private final LotteryConfiguration lotteryConfiguration;
-    
+
     /**
      * The random number generator.
      */
     private final Random random;
-    
+
     /**
      * The storage array for.
      */
     private final int[] numbers;
-    
+
     /**
      * Constructs a {@code LotteryRowGenerator} with a given configuration.
      * 
@@ -37,7 +37,7 @@ public final class LotteryRowGenerator {
     public LotteryRowGenerator(LotteryConfiguration lotteryConfiguration) {
         this(lotteryConfiguration, new Random());
     }
-    
+
     /**
      * Constructs a {@code LotteryRowGenerator} with a given configuration and
      * a seed value.
@@ -49,7 +49,7 @@ public final class LotteryRowGenerator {
                                long seed) {
         this(lotteryConfiguration, new Random(seed));
     }
-    
+
     /**
      * Constructs a {@code LotteryRowGenerator} with a given configuration and
      * a random number generator.
@@ -65,14 +65,14 @@ public final class LotteryRowGenerator {
                 Objects.requireNonNull(
                         lotteryConfiguration,
                         "The input LotteryConfiguration is null.");
-        
-        this.numbers = new int[lotteryConfiguration.getMaximumNumberValue()];
-        
-        for (int i = 0; i < this.numbers.length; i++) {
-            this.numbers[i] = i + 1;
+
+        numbers = new int[lotteryConfiguration.getMaximumNumberValue()];
+
+        for (int i = 0; i < numbers.length; i++) {
+            numbers[i] = i + 1;
         }
     }
-    
+
     /**
      * Generates and returns a list of random lottery rows.
      * 
@@ -82,46 +82,44 @@ public final class LotteryRowGenerator {
     public List<LotteryRow> 
         generateLotteryRows(int numberOfLotteryRows) {
         List<LotteryRow> rows = new ArrayList<>(numberOfLotteryRows);
-        
+
         for (int i = 0; i < numberOfLotteryRows; i++) {
             rows.add(generateRow());
         }
-        
+
         return rows;
     }
-        
+
     private LotteryRow generateRow() {
-        LotteryRow lotteryRow = new LotteryRow(this.lotteryConfiguration);
+        LotteryRow lotteryRow = new LotteryRow(lotteryConfiguration);
         shuffleInternalNumbers();
         loadLotteryRow(lotteryRow);
         return lotteryRow;
     }
-    
+
     private void shuffleInternalNumbers() {
-        for (int i = 0, n = this.lotteryConfiguration.getMaximumNumberValue();
+        for (int i = 0, n = lotteryConfiguration.getMaximumNumberValue();
                 i < n; 
                 i++) {
-            final int i2 = getRandomIndex();
-            swap(i, i2);
+            swap(i, getRandomIndex());
         }
     }
-    
+
     public void loadLotteryRow(LotteryRow lotteryRow) {
-        for (int i = 0, n = this.lotteryConfiguration.getLotteryRowLength();
+        for (int i = 0, n = lotteryConfiguration.getLotteryRowLength();
                 i < n;
                 i++) {
-            lotteryRow.appendNumber(this.numbers[i]);
+            lotteryRow.appendNumber(numbers[i]);
         }
     }
-    
+
     private int getRandomIndex() {
-        return this.random.nextInt(
-                this.lotteryConfiguration.getMaximumNumberValue());
+        return random.nextInt(lotteryConfiguration.getMaximumNumberValue());
     }
-    
+
     private void swap(final int index1, final int index2) {
-        int tmp = this.numbers[index1];
-        this.numbers[index1] = this.numbers[index2];
-        this.numbers[index2] = tmp;
+        int tmp = numbers[index1];
+        numbers[index1] = numbers[index2];
+        numbers[index2] = tmp;
     }
 }

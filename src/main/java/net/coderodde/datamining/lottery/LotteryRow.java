@@ -11,24 +11,24 @@ import java.util.Objects;
  * @version 1.6 (Apr 18, 2020) ~ initial version.
  * @since 1.6 (Apr 18, 2020)
  */
-public final class LotteryRow {
-    
+public class LotteryRow {
+
     /**
      * The configuration object.
      */
     private final LotteryConfiguration lotteryConfiguration;
-    
+
     /**
      * The actual lottery numbers.
      */
     private final int[] lotteryNumbers;
-    
+
     /**
      * Stores the index of the internal storage array at which the next lottery
      * number will be inserted.
      */
     private int size = 0;
-    
+
     /**
      * Constructs an empty lottery row with given configuration.
      * 
@@ -37,16 +37,16 @@ public final class LotteryRow {
     public LotteryRow(LotteryConfiguration lotteryConfiguration) {
         this.lotteryConfiguration = 
                 Objects.requireNonNull(lotteryConfiguration);
-        
+
         this.lotteryNumbers =
                 new int[lotteryConfiguration.getLotteryRowLength()];
     }
-    
+
     @Override
     public String toString() {
-        final StringBuilder stringBuilder = new StringBuilder();
+        StringBuilder stringBuilder = new StringBuilder();
         boolean isFirst = true;
-        
+
         for (final int number : this.lotteryNumbers) {
             if (isFirst) {
                 isFirst = false;
@@ -55,10 +55,10 @@ public final class LotteryRow {
                 stringBuilder.append(",").append(number);
             }
         }
-        
+
         return stringBuilder.toString();
     }
-    
+
     /**
      * Appends a number to the tail of this lottery row.
      * 
@@ -67,10 +67,10 @@ public final class LotteryRow {
     public void appendNumber(int number) {
         checkNumber(number);
         checkHasSpaceForNewNumber();
-        this.lotteryNumbers[this.size++] = number;
-        Arrays.sort(this.lotteryNumbers, 0, size);
+        lotteryNumbers[size++] = number;
+        Arrays.sort(lotteryNumbers, 0, size);
     }
-    
+
     /**
      * Returns the <code>index</code>th number.
      * 
@@ -79,16 +79,7 @@ public final class LotteryRow {
      */
     public int getNumber(int index) {
         checkIndex(index);
-        return this.lotteryNumbers[index];
-    }
-    
-    /**
-     * Returns the length of the lottery row in numbers.
-     * 
-     * @return the length of the lottery row.
-     */
-    public int size() {
-        return this.lotteryConfiguration.getLotteryRowLength();
+        return lotteryNumbers[index];
     }
     
     /**
@@ -97,9 +88,9 @@ public final class LotteryRow {
      * @return the configuration object.
      */
     public LotteryConfiguration getLotteryConfiguration() {
-        return this.lotteryConfiguration;
+        return lotteryConfiguration;
     }
-    
+
     /**
      * Checks that there is more space for lottery numbers in this row.
      */
@@ -109,7 +100,7 @@ public final class LotteryRow {
                     "The lottery row cannot accommodate more numbers.");
         }
     }
-    
+
     /**
      * Checks that the input number is within the lottery number range.
      * 
@@ -119,7 +110,7 @@ public final class LotteryRow {
         if (number < 1) {
             throw new IllegalArgumentException("number(" + number + ") < 1");
         }
-        
+
         if (number > this.lotteryConfiguration.getMaximumNumberValue()) {
             throw new IllegalArgumentException(
                 "number (" + number + ") > " +
@@ -127,7 +118,7 @@ public final class LotteryRow {
                 this.lotteryConfiguration.getMaximumNumberValue() + "]");
         }
     }
-    
+
     /**
      * Checks that the index is withing the range <code>[0, n)</code>.
      * 
@@ -137,7 +128,7 @@ public final class LotteryRow {
         if (index < 0) {
             throw new IllegalArgumentException("index(" + index + ") < 0");
         }
-        
+
         if (index >= this.size) {
             throw new IllegalArgumentException(
                     "index(" + index + ") >= this.index(" + this.size + ")");
